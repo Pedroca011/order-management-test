@@ -32,10 +32,10 @@ COPY --from=builder /app/dist ./dist
 
 # Variáveis de ambiente
 ENV NODE_ENV=production
-ENV MONGO_URL_LOCAL=mongodb+srv://03ramos011_db_user:i29VzbFyNhweZTBL@cluster0.mxdtvyh.mongodb.net/
-ENV MONGO_DB_USER=03ramos011_db_user
-ENV MONGO_DB_PASSWORD=i29VzbFyNhweZTBL
-ENV MONGO_URL=mongodb+srv://03ramos011_db_user:i29VzbFyNhweZTBL@cluster0.mxdtvyh.mongodb.net/
+ENV MONGO_URL_LOCAL=
+ENV MONGO_DB_USER=
+ENV MONGO_DB_PASSWORD=
+ENV MONGO_URL=
 
 # Porta padrão da API
 EXPOSE 5000
