@@ -1,204 +1,161 @@
+# Order Management API — Technical Test
 
-# Node TypeScript Boilerplate Mongoose
+Este projeto é uma **API REST desenvolvida como teste técnico** para avaliação de conhecimentos em **Node.js, Express, TypeScript e MongoDB (Mongoose)**.
 
-The main purpose of this repository is to show a good end-to-end project setup and workflow for writing a Mongoose Node.js Express code in TypeScript complete with middleware, models, routes, and types.
+---
 
-This example comes with a complete REST API to handle Authentication and CRUD features on Users and their corresponding Profile.
-## Tech Stack
+## 🎯 Objetivo do Projeto
 
-**Server:** Node, Express, typescript, ts-node
+Criar uma API para **gerenciamento de pedidos (Orders)**, contendo:
 
-**DataBase:** mongoose
+- Autenticação com JWT
+- Controle de permissões por role (`admin`, `user`)
+- CRUD de pedidos
+- Fluxo de status com regras de negócio
+- Validações de dados e regras de domínio
+- Estrutura organizada em **controllers, services, models e middlewares**
 
+---
 
-## Run Locally
+## 🧱 Tecnologias Utilizadas
 
-Clone the project
+### Backend
+- **Node.js**
+- **Express**
+- **TypeScript**
+- **Mongoose**
+- **JWT (jsonwebtoken)**
+- **bcrypt**
+- **express-validator**
 
-```bash
-  git clone https://github.com/chiragmehta900/node-typescript-boilerplate-mongoose
-```
+### Banco de Dados
+- **MongoDB**
 
-Go to the project directory
+---
 
-```bash
-  cd node-typescript-boilerplate-mongoose
-```
-
-Install dependencies
-
-```bash
-  npm install
-```
-
-Start the tsc
-
-```bash
-  npm run watch
-```
-
-Start the server
+## 📁 Estrutura do Projeto
 
 ```bash
-  npm run dev
+src
+├── config # Configurações do ambiente (DB, JWT, etc)
+├── controllers # Camada de controllers (entrada HTTP)
+├── services # Regras de negócio
+├── models # Schemas do Mongoose
+├── routes # Definição das rotas da API
+├── middlewares # Auth, permissões, validações
+├── interfaces # Tipagens TypeScript
+├── utils # Helpers (JWT, responses, erros)
+└── index.ts # Entry point da aplicação
+``` 
+
+
+Após o build, os arquivos são compilados para a pasta `dist/`.
+
+---
+
+## ⚙️ Pré-requisitos
+
+Antes de rodar o projeto, você precisa ter instalado:
+
+- **Node.js** (versão 18+ recomendada)
+- **MongoDB** (local ou Atlas)
+- **npm**
+
+---
+
+## 🔐 Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+MONGO_DB_USER="usuario"
+MONGO_DB_PASSWORD="hdsfsdof"
+MONGO_URL=""
+MONGO_URL_LOCAL="mongodb://localhost:27017/order-management"
+
+NODE_ENV="local"
+SERVER_PORT="3333"
+
+JWT_SECRETS="Test123"
 ```
+#### Ajuste o MONGO_URL conforme seu ambiente (local ou cloud).
 
+---
 
-## Environment Variables
+# ▶️ Como Executar o Projeto
+## 1️⃣ Clonar o repositório
 
-To run this project, you will need to add the following environment variables to your .env file
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd order-management-test
+``` 
+## 2️⃣ Instalar as dependências
 
-`NODE_ENV="production"`, 
-`NODE_ENV="local"`, 
-`MONGO_DB_USER`, 
-`MONGO_DB_PASSWORD`. 
-`JWT_SECRETS`, 
-`SMTP_HOST`, 
-`SMTP_PORT`, 
-`SMTP_USERNAME`, 
-`SMTP_PASSWORD`, 
-`SMTP_SENDER`,
+```bash
+npm install
+``` 
 
+## 3️⃣ Rodar em modo desenvolvimento
 
-## Project Structure
+```bash
+npm run dev
+``` 
 
-The most obvious difference in a TypeScript + Node project is the folder structure. In a TypeScript project, it's best to have separate _source_ and _distributable_ files. TypeScript (`.ts`) files live in your `src` folder and after compilation are output as JavaScript (`.js`) in the `dist` folder.
+## 4️⃣ Build para produção
 
-The full folder structure of this app is explained below:
+```bash
+npm run build
+``` 
+## 5️⃣ Rodar versão compilada
 
-> **Note!** Make sure you have already built the app using `npm run start`
+```bash
+npm run start
+``` 
+# 🧪 Endpoints Principais
+## 🔐 Autenticação
 
-| Name               | Description                                                                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **config**         | Contains config environment to be used by the config package, such as MongoDB URI, jwtSecret, and etc.                                                        |
-| **dist**           | Contains the distributable (or output) from your TypeScript build                                                                                             |
-| **node_modules**   | Contains all your npm dependencies                                                                                                                            |
-| **src**            | Contains your source code that will be compiled to the dist dir                                                                                               |
-| **src/middleware** | Contains the middlewares to intercept requests                                                                                                                |
-| **src/models**     | Models define Mongoose schemas that will be used in storing and retrieving data from MongoDB                                                                  |
-| **src/controller** | The controller accesses the database through the model                                                                                                        |
-| **src/routes**     | Routes define the endpoints of your API                                                                                                                       |
-| **src/interfaces** | Contains all your custom types to better handle type checking with TypeScript                                                                                 |
-| **src/services**   | Contains custom types of services like sending mail and etc..                                                                                                 |
-| **src/templates**  | Contains custom mail templates of send mail for users.                                                                                                        |
-| **src/index.ts**   | Entry point to your express app                                                                                                                               |
-| package.json       | File that contains npm dependencies as well as build scripts                                                                                                  |
-| tsconfig.json      | Config settings for compiling server code written in TypeScript                                                                                               |
-| tslint.json        | Config settings for TSLint code style checking                                                                                                                |
+- POST /api/v1/auth/login
 
-### Configuring TypeScript compilation
+## 👤 Usuários
 
-TypeScript uses the file `tsconfig.json` to adjust project compile options.
-Let's dissect this project's `tsconfig.json`, starting with the `compilerOptions` which details how your project is compiled.
+- POST /api/v1/user/sign-up
+- GET  /api/v1/user
 
-```json
-{
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "lib": [
-      "es2016",
-      "dom"
-    ],
-    "allowJs": true,
-    "checkJs": true,
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "pretty": true,
-    "experimentalDecorators": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ]
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
-}
+## 📦 Orders
 
-```
-## Documentation
+- POST   /api/v1/orders
+- GET    /api/v1/orders
+- PATCH  /api/v1/orders/:id/advance
 
-[Documentation](https://linktodocumentation)
+Fluxo de status do pedido
 
+CREATED → ANALYSIS → COMPLETED
 
-## API Reference
+## Regras:
 
-#### Create user
+- Não é permitido pular etapas
 
-```http
-  POST user/sign-up
-```
+- Não é permitido retroceder
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `firstName`      | `string` | **Required**. Your API key |
-| `lastName`      | `string` | **Required**. Your API key |
-| `avatar`      | `string` | **Required**. Your API key |
-| `email`      | `string` | **Required**. Your API key |
-| `password`      | `string` | **Required**. Your API key |
-| `confirmPassword`      | `number` | **Required**. Your API key |
+- Pedido finalizado não pode ser alterado
 
-#### login user
+# 🐳 Docker (Opcional)
 
-```http
-  POST auth/login
-```
+### O projeto pode ser executado via Docker:
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `email`      | `number` | **Required**. Your API key |
-| `password`      | `string` | **Required**. Your API key |
+```bash
+docker build -t order-api .
+docker run -p 3000:3000 --env-file .env order-api
+```                     
 
+# 📌 Observações
 
-#### Get all users
+- Este projeto foi desenvolvido exclusivamente para fins de avaliação técnica
 
-```http
-  GET user/fetch
-```
+- O foco está em arquitetura, organização, boas práticas e regras de negócio
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `_id` | `uuid` | **Required**. Your API key |
-| `firstName` | `string` | **Required**. Your API key |
-| `lastName` | `string` | **Required**. Your API key |
-| `gender` | `string` | **Required**. Your API key |
-| `dateOfBirth` | `string` | **Required**. Your API key |
-| `residence` | `string` | **Required**. Your API key |
-| `avatar` | `string` | **Required**. Your API key |
-| `email` | `string` | **Required**. Your API key |
-| `password` | `string` | **Required**. Your API key |
-| `role` | `string` | **Required**. Your API key |
-| `isEmailVerified` | `boolean` | **Required**. Your API key |
-| `isEmailVerified` | `boolean` | **Required**. Your API key |
+# 👨‍💻 Autor
 
-A postman collection has been added for better understanding.
+## Pedro Ramos Paraiso
 
-
-## Badges
-
-Add badges from somewhere like: [shields.io](https://shields.io/)
-
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
-
-
-## Author
-
-- [@chiragmehta900](https://www.github.com/chiragmehta900)
-
-
-## Support
-
-For support, email chiragmehta900@gmial.com or join our Slack channel.
-
+## Projeto desenvolvido como teste técnico para processo seletivo.
