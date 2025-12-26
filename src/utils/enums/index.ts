@@ -14,4 +14,19 @@ export enum OtpType {
     VERIFICATION = 'verification',
 }
 
+export enum StateType {
+    CREATED = "created",
+    ANALYSIS = "analysis",
+    COMPLETED = "completed"
+}
+
+export enum StatusType {
+    ACTIVE = "active",
+    DELETED = "deleted"
+}
+
+export enum StatusServiceType {
+    PENDINIG = "pending",
+    DONE = "done"
+}
 
