@@ -5,6 +5,7 @@ import Logging from "./library/Logging";
 import http from "http";
 import { router as v1 } from './routes/v1/index';
 import HttpError from "./utils/httpError";
+import { crateRole } from "./controllers/role.controller";
 
 const router = express();
 
@@ -95,4 +96,4 @@ const StartServer = async () => {
     );
 };
 
-const crateRole = () => {};
+

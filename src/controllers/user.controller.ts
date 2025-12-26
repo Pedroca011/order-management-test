@@ -39,7 +39,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       email,
       password: hashPassword,
       role: role._id,
-      isProfileCompleted: false,
     });
 
     const savedUser = await user.save();

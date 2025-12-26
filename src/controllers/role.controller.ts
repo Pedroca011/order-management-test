@@ -1,35 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import { jsonAll } from "../utils/general";
 import Role from "../models/role";
+import Logging from "../library/Logging";
 
 //CREATE AUTOMATIC ROLE AT FIRST WHEN WE CREATE NEW DB
-export function crateRole() {
-  Role.estimatedDocumentCount((err: any, count: number) => {
-    if (!err && count === 0) {
-      new Role({
-        name: "user",
-      })
-        .save()
-        .then(() => {
-          console.log("added 'user' to roles collection");
-        })
-        .catch((err: any) => {
-          console.log("error", err);
-        });
+export async function crateRole() {
+  try {
+    const count = await Role.estimatedDocumentCount();
 
-      new Role({
-        name: "admin",
-      })
-        .save()
-        .then(() => {
-          console.log("added 'admin' to roles collection");
-        })
-        .catch((err: any) => {
-          console.log("error", err);
-        });
+    if (count === 0) {
+      await Role.create([
+        { name: "user" },
+        { name: "admin" },
+      ]);
+
+      Logging.info("✅ Roles 'user' e 'admin' criadas com sucesso");
+    } else {
+      Logging.info("ℹ️ Roles já existem, seed ignorado");
     }
-  });
+  } catch (error) {
+    console.error("❌ Erro ao criar roles:", error);
+  }
 }
+
 //GET ROLES LIST
 const getAllRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
