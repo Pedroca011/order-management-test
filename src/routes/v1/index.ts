@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { router as Role } from "./role.route";
 import { router as UserRouter } from "./user.route";
 import { router as AuthRouter } from "./auth.route";
+import { router as OrderRouter } from "./order.route";
 
 const _router: Router = Router({
   mergeParams: true,
@@ -23,5 +24,6 @@ _router.route("/v1/health-check").get(function (req: Request, res: Response) {
 _router.use("/v1/role", Role);
 _router.use("/v1/user", UserRouter);
 _router.use("/v1/auth", AuthRouter);
+_router.use("/v1/order", OrderRouter)
 
 export const router = _router;
