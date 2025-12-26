@@ -1,9 +1,10 @@
-import * as express from "express";
+import express from "express";
 import mongoose from "mongoose";
 import config from "./config/config";
 import Logging from "./library/Logging";
-import * as http from "http";
+import http from "http";
 import { router as v1 } from './routes/v1/index';
+import HttpError from "./utils/httpError";
 
 const router = express();
 
