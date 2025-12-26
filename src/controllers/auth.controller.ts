@@ -13,7 +13,7 @@ const tokenBuilder = async (user: IUserModel) => {
     const accessToken = generateJWT(
         {
             id: user._id,
-            role: user.role?.name,
+            role: user.role.name,
             tokenType: 'access',
         },
         {
