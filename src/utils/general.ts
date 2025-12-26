@@ -1,4 +1,4 @@
-import { Response } from '../../interfaces/responseInterface';
+import { Response } from '../interfaces/responseInterface';
 
 //SEND RESPONSE FOR LIST
 const jsonAll = function <Res>(
