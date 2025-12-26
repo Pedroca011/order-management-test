@@ -1,43 +1,50 @@
-import { Request, Response, NextFunction } from 'express';
-import { validateToken } from '../utils';
-import HttpError from '../utils/httpError';
+import { Request, Response, NextFunction } from "express";
+import { validateToken } from "../utils";
+import HttpError from "../utils/httpError";
 
 const auth = async function (req: Request, res: Response, next: NextFunction) {
-    try {
-        const token = req.headers.authorization;
-        if (!token) {
-            throw new HttpError({
-                title: 'unauthorized',
-                detail: 'Authorization header missing',
-                code: 401,
-            });
-        }
-        const payload = validateToken(token) as { tokenType?: string; [key: string]: any };
+  try {
+    const authHeader = req.headers.authorization;
 
-        if (payload.tokenType !== 'access') {
-            throw new HttpError({
-                title: 'unauthorized',
-                detail: 'Invalid Authorization header',
-                code: 401,
-            });
-        }
-        // Use type assertion to safely add tokenPayload to req object
-        (req as Request & { tokenPayload?: typeof payload }).tokenPayload = payload;
-        next();
-    } catch (e: unknown) {
-        // Properly narrow 'e' from unknown before accessing properties
-        if (typeof e === 'object' && e !== null && 'opts' in e && (e as any).opts?.title === 'invalid_token') {
-            next(
-                new HttpError({
-                    title: 'unauthorized',
-                    detail: 'Invalid Authorization header',
-                    code: 401,
-                })
-            );
-        } else {
-            next(e);
-        }
+    if (!authHeader) {
+      throw new HttpError({
+        title: "unauthorized",
+        detail: "Authorization header missing",
+        code: 401,
+      });
     }
+
+    const [scheme, token] = authHeader.split(" ");
+
+    if (scheme !== "Bearer" || !token) {
+      throw new HttpError({
+        title: "unauthorized",
+        detail: "Invalid Authorization header format",
+        code: 401,
+      });
+    }
+
+    const payload = validateToken(token) as {
+      tokenType?: string;
+      role?: string;
+      [key: string]: any;
+    };
+
+    console.log("TOKEN PAYLOAD:", payload);
+
+    if (payload.tokenType !== "access") {
+      throw new HttpError({
+        title: "unauthorized",
+        detail: "Invalid token type",
+        code: 401,
+      });
+    }
+
+    (req as Request & { tokenPayload?: typeof payload }).tokenPayload = payload;
+    next();
+  } catch (e) {
+    next(e);
+  }
 };
 
 export default auth;
