@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import orderService from "../services/order.service";
+import { orderService } from "../services";
 import { jsonAll, jsonOne } from "../utils/general";
 import { IOrder } from "../interfaces";
 
@@ -22,11 +22,7 @@ const createOrder = async (
 /* =========================
    LIST
 ========================= */
-const getOrders = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
@@ -54,9 +50,7 @@ const advanceOrder = async (
 ) => {
   try {
     const { id } = req.params;
-
     const order = await orderService.advanceOrderState(id);
-
     return jsonOne(res, 200, order);
   } catch (error) {
     next(error);
