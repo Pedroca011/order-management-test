@@ -5,7 +5,7 @@ import Logging from "./library/Logging";
 import http from "http";
 import { router as v1 } from './routes/v1/index';
 import HttpError from "./utils/httpError";
-import { crateRole } from "./controllers/role.controller";
+import { roleService } from "./services";
 
 const router = express();
 
@@ -15,7 +15,7 @@ mongoose
     Logging.info(`Running on ENV = ${process.env.NODE_ENV}`);
     Logging.info("Connected to mongoDB.");
     StartServer();
-    crateRole();
+    roleService.createDefaultRoles();
   })
   .catch((error) => {
     Logging.error("Unable to connect.");

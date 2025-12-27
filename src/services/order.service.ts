@@ -1,7 +1,7 @@
-import Order from "../models/order";
 import { IOrder } from "../interfaces";
 import HttpError from "../utils/httpError";
-import { StateType } from "../utils/enums";
+import { StateType, StatusType, StatusServiceType } from "../utils/enums";
+import { orderRepository } from "../repositories";
 
 interface ListOrdersParams {
   page: number;
@@ -9,18 +9,26 @@ interface ListOrdersParams {
   state?: string;
 }
 
-const ORDER_FLOW = [StateType.CREATED, StateType.ANALYSIS, StateType.COMPLETED] as const;
+const ORDER_FLOW = [
+  StateType.CREATED,
+  StateType.ANALYSIS,
+  StateType.COMPLETED,
+] as const;
 
+/* =========================
+   CREATE
+========================= */
 const createOrder = async (data: IOrder) => {
-  const order = new Order({
+  return await orderRepository.create({
     ...data,
     state: StateType.CREATED,
-    status: "ACTIVE",
+    status: StatusType.ACTIVE,
   });
-
-  return await order.save();
 };
 
+/* =========================
+   LIST
+========================= */
 const listOrders = async ({ page, limit, state }: ListOrdersParams) => {
   const filter: any = {};
 
@@ -28,12 +36,8 @@ const listOrders = async ({ page, limit, state }: ListOrdersParams) => {
     filter.state = state;
   }
 
-  const total = await Order.countDocuments(filter);
-
-  const orders = await Order.find(filter)
-    .limit(limit)
-    .skip((page - 1) * limit)
-    .sort({ createdAt: -1 });
+  const total = await orderRepository.count(filter);
+  const orders = await orderRepository.findPaginated(filter, page, limit);
 
   return {
     orders,
@@ -46,8 +50,11 @@ const listOrders = async ({ page, limit, state }: ListOrdersParams) => {
   };
 };
 
+/* =========================
+   ADVANCE STATE
+========================= */
 const advanceOrderState = async (orderId: string) => {
-  const order = await Order.findById(orderId);
+  const order = await orderRepository.findById(orderId);
 
   if (!order) {
     throw new HttpError({
@@ -57,7 +64,9 @@ const advanceOrderState = async (orderId: string) => {
     });
   }
 
-  const currentIndex = ORDER_FLOW.indexOf(order.state);
+  const currentIndex = ORDER_FLOW.indexOf(
+    order.state as typeof ORDER_FLOW[number]
+  );
 
   if (currentIndex === -1) {
     throw new HttpError({
@@ -75,12 +84,29 @@ const advanceOrderState = async (orderId: string) => {
     });
   }
 
-  // Próximo estado válido
-  order.state = ORDER_FLOW[currentIndex + 1] as StateType;
-  await order.save();
+  const nextState = ORDER_FLOW[currentIndex + 1];
+  
+  if (!nextState) {
+    throw new HttpError({
+      title: "invalid_transition",
+      detail: "Order is already in the final state",
+      code: 422,
+    });
+  }
 
-  return order;
+  order.state = nextState;
+
+  // ✅ REGRA DE NEGÓCIO
+  if (nextState === StateType.COMPLETED) {
+    order.services = order.services.map(service => ({
+      ...service,
+      status: StatusServiceType.DONE,
+    }));
+  }
+
+  return await orderRepository.update(order);
 };
+
 
 export default {
   createOrder,

@@ -4,7 +4,6 @@ import validate from '../../middlewares/validationMiddleware';
 import auth from '../../middlewares/authMiddleware';
 import permit from '../../middlewares/permissionMiddleware';
 import { password } from '../../validators/userValidator';
-import { requiredTextField } from '../../validators/commonValidator';
 import { RoleType } from '../../utils/enums';
 import { userController } from '../../controllers';
 
@@ -24,24 +23,6 @@ _router
         ]),
         userController.createUser
     );
-
-//UPDATE USER DETAILS
-_router.route('/update/:userId').patch(
-    validate([
-        authorization(),
-        requiredTextField('firstName', 'FirstName', { min: 2, max: 255 }),
-        requiredTextField('lastName', 'LastName', { min: 2, max: 255 }),
-        requiredTextField('dateOfBirth', 'Date Of Birth', {
-            min: 2,
-            max: 255,
-        }),
-        requiredTextField('residence', 'Residence', { min: 2, max: 255 }),
-        requiredTextField('avatar', 'Avatar', { min: 2, max: 255 }),
-    ]),
-    auth,
-    permit([RoleType.ADMIN, RoleType.USER]),
-    userController.updateUser
-);
 
 //GET USER DETAILS BY ID
 _router

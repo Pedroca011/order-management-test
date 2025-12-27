@@ -15,18 +15,18 @@ export enum OtpType {
 }
 
 export enum StateType {
-    CREATED = "created",
-    ANALYSIS = "analysis",
-    COMPLETED = "completed"
+    CREATED = "CREATED",
+    ANALYSIS = "ANALYSIS",
+    COMPLETED = "COMPLETED"
 }
 
 export enum StatusType {
-    ACTIVE = "active",
-    DELETED = "deleted"
+    ACTIVE = "ACTIVE",
+    DELETED = "DELETED"
 }
 
 export enum StatusServiceType {
-    PENDINIG = "pending",
-    DONE = "done"
+    PENDINIG = "PENDING",
+    DONE = "DONE"
 }
 
