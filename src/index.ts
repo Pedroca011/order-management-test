@@ -1,26 +1,12 @@
 import express from "express";
-import mongoose from "mongoose";
 import config from "./config/config";
 import Logging from "./library/Logging";
 import http from "http";
 import { router as v1 } from './routes/v1/index';
 import HttpError from "./utils/httpError";
-import { roleService } from "./services";
+import connectDatabse from "./db/db";
 
 const router = express();
-
-mongoose
-  .connect(config.mongo.url, { retryWrites: true, w: "majority" })
-  .then(() => {
-    Logging.info(`Running on ENV = ${process.env.NODE_ENV}`);
-    Logging.info("Connected to mongoDB.");
-    StartServer();
-    roleService.createDefaultRoles();
-  })
-  .catch((error) => {
-    Logging.error("Unable to connect.");
-    Logging.error(error);
-  });
 
 const StartServer = async () => {
   router.use((req, res, next) => {
@@ -96,4 +82,6 @@ const StartServer = async () => {
     );
 };
 
+// CONNECT DATABASE
+connectDatabse(StartServer);
 
