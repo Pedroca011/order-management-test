@@ -28,7 +28,7 @@ const createUser = async (data: CreateUserData) => {
     });
   }
 // To create an admin account, change the type to ADMIN.
-  const verifyRole = await Role.findOne({ name: RoleType.ADMIN });
+  const verifyRole = await Role.findOne({ name: RoleType.USER });
   if (!verifyRole) {
     throw new HttpError({
       title: "role",
