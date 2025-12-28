@@ -31,7 +31,7 @@ _router
         validate([authorization()]),
         auth,
         permit([RoleType.ADMIN, RoleType.USER]),
-        userController.getUser
+        userController.getUserById
     );
 
 //GET ALL USER LIST

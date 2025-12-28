@@ -18,7 +18,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 /* =========================
    GET BY ID
 ========================= */
-const getUser = async (req: Request, res: Response, next: NextFunction) => {
+const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
     const user = await userService.getUserById(userId);
@@ -45,6 +45,6 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
 
 export default {
   createUser,
-  getUser,
+  getUserById,
   getAllUser,
 };
